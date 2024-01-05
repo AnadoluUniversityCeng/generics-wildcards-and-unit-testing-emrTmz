@@ -1,6 +1,8 @@
 package edu.estu;
 
 import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +19,10 @@ public class App {
     public static void main(String[] args) {
         System.out.println("What is the minimum of the following doubles? Can you guess!");
         List<Double> doubleList = List.of(Double.NaN, 1D, 2D, 3D, -1D, -2D);
+        doubleList = doubleList.stream()
+                .filter(d -> !Double.isNaN(d))
+                .toList();
+        double minValue = Collections.min(doubleList);
         System.out.println("The minimum element - as returned by Collections.min() method - is " + Collections.min(doubleList));
         System.out.println("Did you correctly anticipate the actual result? Did you find the actual result awkward or unexpected?");
     }
@@ -34,7 +40,6 @@ public class App {
         }
     }
 
-
     /**
      * There's often a case when we can declare a generic method using either wildcards or type parameters.
      * https://www.baeldung.com/java-generics-type-parameter-vs-wildcard
@@ -44,30 +49,32 @@ public class App {
      *
      * @param map the frequency map, keys can be any Enum (built-in or custom), values are Integer.
      * @param key any Enum type should work. Hint: How do I decrypt "Enum<E extends Enum<E>>"?
-     * http://www.angelikalanger.com/GenericsFAQ/FAQSections/TypeParameters.html#FAQ106
+     *          http://www.angelikalanger.com/GenericsFAQ/FAQSections/TypeParameters.html#FAQ106
      */
+    static <E extends Enum<E>> void incrementCountMapGenerics(Map<E, Integer> map, E key) {
+        map.merge(key, 1, Integer::sum);
+    }
 
+    static void incrementCountMapWildcard(Map<Enum<?>, Integer> map, Enum<?> key) {
+        map.merge(key, 1, Integer::sum);
+    }
 
-    /* **********************************************
-     ******* ALL TESTS MUST PASS IN THE END *********
-     **** WRITE YOUR 4 static void METHODS HERE: ****
-     ************************************************
+      /* Increment the count in a frequency map for EnumDesc keys using generics.
+            *
+            * @param map Frequency map with EnumDesc keys.
+            * @param key EnumDesc key.
      */
+    static <E extends Enum<E>> void incrementCountMapEnumDescG(Map<? super Enum.EnumDesc<E>, Integer> map, Enum.EnumDesc<E> key) {
+        map.merge(key, 1, Integer::sum);
+    }
 
     /**
-     * Hint: Map.merge() - One method to rule them all
-     * https://nurkiewicz.com/2019/03/mapmerge-one-method-to-rule-them-all.html
+     * Increment the count in a frequency map for EnumDesc keys using wildcards.
+     *
+     * @param map Frequency map with EnumDesc keys.
+     * @param key EnumDesc key.
      */
-    static <> void {
-    }
-
-    static void {
-    }
-
-    static <> void {
-    }
-
-    static void {
+    static void incrementCountMapEnumDescW(Map<Enum.EnumDesc<?>, Integer> map, Enum.EnumDesc<?> key) {
+        map.merge(key, 1, Integer::sum);
     }
 }
-
